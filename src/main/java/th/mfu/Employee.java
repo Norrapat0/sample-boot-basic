@@ -2,10 +2,16 @@ package th.mfu;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -21,10 +27,18 @@ public class Employee {
     private String fname;
     @JsonProperty("last_name")
     private String lname;
-
     private Date bdate;
     private long salary;
 
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "position_id", referencedColumnName = "id")
+    private Position position;
+
+    @OneToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
+
+    
     public Employee() {
 
     }
@@ -75,6 +89,22 @@ public class Employee {
 
     public void setSalary(long salary) {
         this.salary = salary;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 
 }

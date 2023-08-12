@@ -29,7 +29,7 @@ public class EmployeeController {
     // select all employeee
     @GetMapping("/employees")
     public Collection<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        return employeeRepository.findByOrderByFnameAsc();
     }
 
     // select employee by id

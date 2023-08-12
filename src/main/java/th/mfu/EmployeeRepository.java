@@ -10,4 +10,6 @@ public interface EmployeeRepository extends CrudRepository<Employee, Long> {
     public List<Employee> findByFname(String firstname);
 
     public List<Employee> findByFnameStartingWith(String prefix);
+
+    public List<Employee> findByOrderByFnameAsc();
 }
