@@ -26,6 +26,9 @@ public class EmployeeController {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    @Autowired
+    private EmployeeMapper employeeMapper;
+
     // select all employeee
     @GetMapping("/employees")
     public Collection<Employee> getAllEmployees() {
@@ -86,58 +89,26 @@ public class EmployeeController {
         return ResponseEntity.ok("Employee updated");
     }
 
-    // //update employee with some fields using patch
-    // @PatchMapping("/employees/{id}")
-    // public ResponseEntity<String> patchEmployee(@PathVariable long id,
-    // @RequestBody HashMap<String, Object> fieldstoupdate){
-    // //check if id not exists
-    // if(!employeesDB.containsKey(id)){
-    // //return error message
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not
-    // found");
-    // }
+    //update employee with some fields using patch
+    @PatchMapping("/employees/{id}")
+    public ResponseEntity<String> patchEmployee(@PathVariable long id,
+    @RequestBody EmployeeDTO employeeDTO){
 
-    // //get employee from db
-    // Employee emp = employeesDB.get(id);
-    // //loop throught fields to update
-    // fieldstoupdate.forEach((key,value) -> {
-    // //check if field is firstname
-    // if(key.equals("first_name")){
-    // //update firstname
-    // emp.setFirstname((String)value);
-    // }
-    // //check if field is lastname
-    // if(key.equals("last_name")){
-    // //update lastname
-    // emp.setLastname((String)value);
-    // }
+        Optional<Employee> optEmployee=employeeRepository.findById(id);
+        
+        if(!optEmployee.isPresent())
+        {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
+        }
+        Employee emp= optEmployee.get();
 
-    // //check if field is salary
-    // if(key.equals("salary")){
-    // //update salary
-    // emp.setSalary(Long.valueOf(""+value));
-    // }
+        employeeMapper.updateEmployeeFromDto(employeeDTO, emp);
 
-    // //check if field is birthday
-    // if(key.equals("birthday")){
-    // //update birthday
-    // SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        //save to db
+        employeeRepository.save(emp);
+        return ResponseEntity.ok("Employee Update");
 
-    // try {
-    // emp.setBirthday(formatter.parse((String)value));
-    // } catch (ParseException e) {
-    // e.printStackTrace();
-    // }
-    // }
-
-    // });
-
-    // //update employee
-    // employeesDB.put(id, emp);
-
-    // //return success message
-    // return ResponseEntity.ok("Employee updated");
-    // }
+    }
 
     // delete employee
     @DeleteMapping("/employees/{id}")

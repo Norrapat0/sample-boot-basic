@@ -27,6 +27,8 @@ public class Employee {
     private String fname;
     @JsonProperty("last_name")
     private String lname;
+
+    @JsonFormat(pattern="dd/MM/yyyy")
     private Date bdate;
     private long salary;
 
